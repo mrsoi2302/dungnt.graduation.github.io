@@ -11,53 +11,57 @@
             color: #00ff88;
             font-family: 'Roboto Mono', monospace;
             text-align: center;
-            overflow: hidden;
             margin: 0;
+            /* Đã sửa: Cho phép cuộn ở màn hình chính */
+            overflow-x: hidden; 
+            overflow-y: auto;
         }
 
         .container {
             padding: 50px 20px;
             max-width: 800px;
             margin: auto;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: 100vh;
         }
 
         h1 {
             font-family: 'Bungee', cursive;
-            font-size: 3rem;
+            font-size: clamp(1.5rem, 8vw, 3rem); /* Responsive font size */
             color: #ff0055;
             text-shadow: 3px 3px #fff;
-            margin-top: 0;
+            margin-top: 20px;
         }
 
         .card {
             border: 4px solid #00ff88;
-            padding: 30px;
+            padding: 20px;
             background: #252525;
-            box-shadow: 10px 10px 0px #ff0055;
+            box-shadow: 8px 8px 0px #ff0055;
             margin-bottom: 30px;
         }
 
-        .info-text { font-size: 1.2rem; margin: 10px 0; color: #fff; }
+        .info-text { font-size: 1.1rem; margin: 10px 0; color: #fff; line-height: 1.5; }
 
         .btn-group {
             position: relative;
-            height: 200px;
+            min-height: 250px; /* Tăng không gian để nút No chạy */
             margin-top: 20px;
+            width: 100%;
         }
 
         .btn {
-            padding: 20px 40px;
-            font-size: 1.5rem;
+            padding: 15px 30px;
+            font-size: 1.2rem;
             font-family: 'Bungee', cursive;
             border: none;
             cursor: pointer;
             transition: 0.1s;
             text-decoration: none;
             display: inline-block;
+            touch-action: manipulation; /* Tối ưu cho cảm ứng */
         }
 
         .btn-yes {
@@ -66,14 +70,14 @@
             z-index: 2;
         }
 
-        .btn-yes:hover { transform: scale(1.1) rotate(-3deg); background-color: #fff; }
-
         .btn-no {
             background-color: #ff0055;
             color: #fff;
             position: absolute;
             white-space: nowrap;
             z-index: 1;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         /* Giao diện HACKED */
@@ -86,24 +90,21 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            overflow: hidden; /* Khóa cuộn khi bị hack */
         }
 
         .glitch-text {
-            font-size: 4rem;
+            font-size: clamp(1.5rem, 10vw, 4rem);
             color: #f00;
             font-family: 'Bungee';
             animation: blink 0.1s infinite;
             text-shadow: 2px 2px #fff;
+            padding: 0 10px;
         }
 
         canvas { position: absolute; top: 0; left: 0; z-index: -1; }
 
-        @keyframes blink {
-            0% { opacity: 1; }
-            50% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes shake {
             0% { transform: translate(1px, 1px) rotate(0deg); }
             20% { transform: translate(-3px, 0px) rotate(1deg); }
@@ -134,24 +135,25 @@
         </div>
     </div>
 
-    <!-- Màn hình giả bị Hack -->
     <div id="hack-screen">
         <canvas id="matrix-canvas"></canvas>
         <h1 class="glitch-text">SYSTEM HACKED!</h1>
-        <p style="color: #0f0; font-size: 1.5rem;">Toàn bộ ảnh dìm hàng của cậu đã được tải lên...</p>
-        <p style="color: #fff; margin-top: 20px; font-style: italic;">(Đùa thôi! Nhấn F11 hoặc Esc để thoát nhé. Hẹn gặp cậu ở lễ tốt nghiệp! ❤️)</p>
+        <p style="color: #0f0; font-size: 1.1rem; padding: 20px;">Toàn bộ ảnh dìm hàng của cậu đã được tải lên...</p>
+        <p style="color: #fff; font-size: 0.9rem; font-style: italic;">(Nhấn F11 hoặc vuốt để thoát. Hẹn gặp cậu nhé! ❤️)</p>
     </div>
 
     <script>
         const btnNo = document.getElementById('run-btn');
-        const trollTexts = ["Bắt hụt rồi!", "Còn lâu nhá!", "Mơ đi!", "Hụt rồi cưng!", "Hì hì!", "Lêu lêu!"];
+        const trollTexts = ["Hụt rồi!", "Mơ đi!", "Lêu lêu!", "Dễ gì!", "Còn lâu!"];
 
-        // Logic nút chạy trốn
         function moveBtn() {
             const randomText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
             btnNo.innerText = randomText;
+            
+            // Giới hạn trong màn hình để không làm vỡ giao diện điện thoại
             const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
             const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            
             btnNo.style.position = 'fixed';
             btnNo.style.left = x + 'px';
             btnNo.style.top = y + 'px';
@@ -159,23 +161,25 @@
         }
 
         btnNo.addEventListener('mouseover', moveBtn);
-        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            moveBtn();
+        });
 
-        // Logic Hack khi bấm nút "CÓ"
         function triggerHack() {
-            // Vào chế độ toàn màn hình
+            // Khóa cuộn hoàn toàn khi bị hack
+            document.body.style.overflow = 'hidden';
+
             const doc = document.documentElement;
             if (doc.requestFullscreen) doc.requestFullscreen();
             else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
 
-            // Chuyển giao diện
             document.getElementById('main-ui').style.display = 'none';
             document.getElementById('hack-screen').style.display = 'flex';
             
             startMatrix();
         }
 
-        // Hiệu ứng Matrix Rain
         function startMatrix() {
             const canvas = document.getElementById('matrix-canvas');
             const ctx = canvas.getContext('2d');
