@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sự Kiện Trọng Đại: Tui Tốt Nghiệp! 🎓</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #00ff88;
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        .container {
+            padding: 50px 20px;
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Bungee', cursive;
+            font-size: 3rem;
+            color: #ff0055;
+            text-shadow: 3px 3px #fff;
+            margin-top: 0;
+        }
+
+        .card {
+            border: 4px solid #00ff88;
+            padding: 30px;
+            background: #252525;
+            box-shadow: 10px 10px 0px #ff0055;
+            margin-bottom: 30px;
+        }
+
+        .info-text { font-size: 1.2rem; margin: 10px 0; color: #fff; }
+
+        .btn-group {
+            position: relative;
+            height: 200px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 20px 40px;
+            font-size: 1.5rem;
+            font-family: 'Bungee', cursive;
+            border: none;
+            cursor: pointer;
+            transition: 0.1s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-yes {
+            background-color: #00ff88;
+            color: #000;
+            z-index: 2;
+        }
+
+        .btn-yes:hover { transform: scale(1.1) rotate(-3deg); background-color: #fff; }
+
+        .btn-no {
+            background-color: #ff0055;
+            color: #fff;
+            position: absolute;
+            white-space: nowrap;
+            z-index: 1;
+        }
+
+        /* Giao diện HACKED */
+        #hack-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .glitch-text {
+            font-size: 4rem;
+            color: #f00;
+            font-family: 'Bungee';
+            animation: blink 0.1s infinite;
+            text-shadow: 2px 2px #fff;
+        }
+
+        canvas { position: absolute; top: 0; left: 0; z-index: -1; }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            100% { transform: translate(1px, -1px) rotate(0deg); }
+        }
+        .shaking { animation: shake 0.5s infinite; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="main-ui">
+        <h1>CẢNH BÁO: TUI RA TRƯỜNG!</h1>
+        
+        <div class="card">
+            <p class="info-text">Sau bao năm "mài đít" trên ghế nhà trường...</p>
+            <p class="info-text" style="color: #ffea00; font-weight: bold;">CUỐI CÙNG TUI CŨNG TỐT NGHIỆP RỒI!</p>
+            <hr style="border: 1px dashed #00ff88; margin: 20px 0;">
+            <p class="info-text">📍 <b>Địa điểm:</b> Hội trường lớn - [Trường của bạn]</p>
+            <p class="info-text">⏰ <b>Thời gian:</b> 08:00 AM | Ngày 30/05/2026</p>
+        </div>
+
+        <h2>Cậu có vác mặt đến chúc mừng tớ không?</h2>
+
+        <div class="btn-group" id="area">
+            <button onclick="triggerHack()" class="btn btn-yes">CÓ, ĐỢI TUI! 🔥</button>
+            <button class="btn btn-no" id="run-btn">HỔNG ĐI ĐÂU 😜</button>
+        </div>
+    </div>
+
+    <!-- Màn hình giả bị Hack -->
+    <div id="hack-screen">
+        <canvas id="matrix-canvas"></canvas>
+        <h1 class="glitch-text">SYSTEM HACKED!</h1>
+        <p style="color: #0f0; font-size: 1.5rem;">Toàn bộ ảnh dìm hàng của cậu đã được tải lên...</p>
+        <p style="color: #fff; margin-top: 20px; font-style: italic;">(Đùa thôi! Nhấn F11 hoặc Esc để thoát nhé. Hẹn gặp cậu ở lễ tốt nghiệp! ❤️)</p>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('run-btn');
+        const trollTexts = ["Bắt hụt rồi!", "Còn lâu nhá!", "Mơ đi!", "Hụt rồi cưng!", "Hì hì!", "Lêu lêu!"];
+
+        // Logic nút chạy trốn
+        function moveBtn() {
+            const randomText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
+            btnNo.innerText = randomText;
+            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+            btnNo.classList.add('shaking');
+        }
+
+        btnNo.addEventListener('mouseover', moveBtn);
+        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
+
+        // Logic Hack khi bấm nút "CÓ"
+        function triggerHack() {
+            // Vào chế độ toàn màn hình
+            const doc = document.documentElement;
+            if (doc.requestFullscreen) doc.requestFullscreen();
+            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+
+            // Chuyển giao diện
+            document.getElementById('main-ui').style.display = 'none';
+            document.getElementById('hack-screen').style.display = 'flex';
+            
+            startMatrix();
+        }
+
+        // Hiệu ứng Matrix Rain
+        function startMatrix() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function draw() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#0f0";
+                ctx.font = fontSize + "px monospace";
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            setInterval(draw, 33);
+        }
+    </script>
+</body>
+</html>
