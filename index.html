@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sự Kiện Trọng Đại: Tui Tốt Nghiệp! 🎓</title>
+    <title>Sự Kiện Trọng Đại! 🎓</title>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         body {
             background-color: #1a1a1a;
@@ -12,27 +13,27 @@
             font-family: 'Roboto Mono', monospace;
             text-align: center;
             margin: 0;
-            /* Đã sửa: Cho phép cuộn ở màn hình chính */
             overflow-x: hidden; 
             overflow-y: auto;
         }
 
         .container {
-            padding: 50px 20px;
+            padding: 20px;
             max-width: 800px;
             margin: auto;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
 
         h1 {
             font-family: 'Bungee', cursive;
-            font-size: clamp(1.5rem, 8vw, 3rem); /* Responsive font size */
+            font-size: clamp(1.2rem, 6vw, 2.5rem);
             color: #ff0055;
-            text-shadow: 3px 3px #fff;
-            margin-top: 20px;
+            text-shadow: 2px 2px #fff;
+            margin-bottom: 15px;
         }
 
         .card {
@@ -41,46 +42,57 @@
             background: #252525;
             box-shadow: 8px 8px 0px #ff0055;
             margin-bottom: 30px;
+            position: relative;
+            z-index: 10;
+            width: 90%;
         }
 
-        .info-text { font-size: 1.1rem; margin: 10px 0; color: #fff; line-height: 1.5; }
+        .photo-container {
+            margin: 15px auto;
+            width: 220px;
+            height: 280px;
+            border: 3px solid #ffea00;
+            box-shadow: 5px 5px 0px #00ff88;
+            overflow: hidden;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-text { font-size: 1rem; margin: 8px 0; color: #fff; line-height: 1.4; }
 
         .btn-group {
-            position: relative;
-            min-height: 250px; /* Tăng không gian để nút No chạy */
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
             margin-top: 20px;
             width: 100%;
+            min-height: 80px;
         }
 
         .btn {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 25px;
+            font-size: 1.1rem;
             font-family: 'Bungee', cursive;
             border: none;
             cursor: pointer;
-            transition: 0.1s;
+            transition: transform 0.1s;
             text-decoration: none;
-            display: inline-block;
-            touch-action: manipulation; /* Tối ưu cho cảm ứng */
-        }
-
-        .btn-yes {
-            background-color: #00ff88;
-            color: #000;
-            z-index: 2;
-        }
-
-        .btn-no {
-            background-color: #ff0055;
-            color: #fff;
-            position: absolute;
+            touch-action: manipulation;
             white-space: nowrap;
-            z-index: 1;
-            left: 50%;
-            transform: translateX(-50%);
         }
 
-        /* Giao diện HACKED */
+        .btn-yes { background-color: #00ff88; color: #000; position: relative; }
+        .btn-no { background-color: #ff0055; color: #fff; position: relative; }
+
         #hack-screen {
             display: none;
             position: fixed;
@@ -90,19 +102,18 @@
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            overflow: hidden; /* Khóa cuộn khi bị hack */
+            overflow: hidden;
         }
 
         .glitch-text {
-            font-size: clamp(1.5rem, 10vw, 4rem);
+            font-size: clamp(1.2rem, 8vw, 3rem);
             color: #f00;
             font-family: 'Bungee';
             animation: blink 0.1s infinite;
             text-shadow: 2px 2px #fff;
-            padding: 0 10px;
         }
 
-        canvas { position: absolute; top: 0; left: 0; z-index: -1; }
+        #matrix-canvas { position: absolute; top: 0; left: 0; z-index: -1; }
 
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         @keyframes shake {
@@ -117,67 +128,113 @@
 <body>
 
     <div class="container" id="main-ui">
-        <h1>CẢNH BÁO: TUI RA TRƯỜNG!</h1>
-        
-        <div class="card">
-            <p class="info-text">Sau bao năm "mài đít" trên ghế nhà trường...</p>
-            <p class="info-text" style="color: #ffea00; font-weight: bold;">CUỐI CÙNG TUI CŨNG TỐT NGHIỆP RỒI!</p>
-            <hr style="border: 1px dashed #00ff88; margin: 20px 0;">
-            <p class="info-text">📍 <b>Địa điểm:</b> Học viện Công nghệ Bưu chính Viễn thông <br/> Số 96A Trần Phú, phường Hà Đông, Hà Nội</p>
-            <p class="info-text">⏰ <b>Thời gian:</b> 03:30 pm | Ngày 23/05/2026</p>
+        <div id="question-part">
+            <h1>Cậu ơi...</h1>
+            <h2 style="color: #fff; font-size: 1.2rem;">Chiều thứ 7 tới cậu có rảnh không? 👉👈</h2>
+            <div class="btn-group">
+                <button onclick="triggerHack()" class="btn btn-yes">RẢNH NÈ! 🔥</button>
+                <button class="btn btn-no" id="run-btn">BẬN RỒI 😜</button>
+            </div>
         </div>
 
-        <h2>Cậu có vác mặt đến chúc mừng tớ không?</h2>
-
-        <div class="btn-group" id="area">
-            <button onclick="triggerHack()" class="btn btn-yes">CÓ, ĐỢI TUI! 🔥</button>
-            <button class="btn btn-no" id="run-btn">HỔNG ĐI ĐÂU 😜</button>
+        <div id="info-part" style="display: none; width: 100%;">
+            <h1>SURPRISE! 🎉</h1>
+            <div class="card" id="info-card" style="margin: auto;">
+                <div class="photo-container">
+                    <img src="https://lh3.google.com/u/0/d/1PCu7F-84wCtQZyFganrfULWOgXo0JTmR=w1920-h911-iv1?auditContext=prefetch" alt="Graduation Photo">
+                </div>
+                <p class="info-text">Biết ngay rảnh mà, không thoát được đâu!</p>
+                <p class="info-text" style="color: #ffea00; font-weight: bold; font-size: 1.2rem;">DŨNG TỐT NGHIỆP RỒI NÈ!</p>
+                <hr style="border: 1px dashed #00ff88; margin: 15px 0;">
+                <p class="info-text">📍 <b>Địa điểm:</b> Học viện Công nghệ Bưu chính Viễn thông <br/> Số 96A Trần Phú, Hà Đông, Hà Nội</p>
+                <p class="info-text">⏰ <b>Thời gian:</b> 03:30 PM | Thứ 7, Ngày 23/05/2026</p>
+                <p class="info-text">📞 <b>Liên hệ:</b> 0339422580 (Thằng tốt nghiệp)</p>
+                <p class="info-text">Đến chụp ảnh dìm hàng tui nha! ❤️</p>
+            </div>
         </div>
     </div>
 
     <div id="hack-screen">
         <canvas id="matrix-canvas"></canvas>
         <h1 class="glitch-text">SYSTEM HACKED!</h1>
-        <p style="color: #0f0; font-size: 1.1rem; padding: 20px;">Toàn bộ ảnh dìm hàng của cậu đã được tải lên...</p>
-        <p style="color: #fff; font-size: 0.9rem; font-style: italic;">(Nhấn F11 hoặc vuốt để thoát. Hẹn gặp cậu nhé! ❤️)</p>
+        <p style="color: #0f0; font-size: 1rem; padding: 15px;">Đang quét dữ liệu người dùng rảnh rỗi...</p>
     </div>
 
     <script>
         const btnNo = document.getElementById('run-btn');
-        const trollTexts = ["Hụt rồi!", "Mơ đi!", "Lêu lêu!", "Dễ gì!", "Còn lâu!"];
+        const trollTexts = ["Còn lâu!", "Mơ đi!", "Lêu lêu!", "Dễ gì!", "Bắt hụt rồi!"];
+        
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(frequency, duration) {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'square';
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
 
         function moveBtn() {
             const randomText = trollTexts[Math.floor(Math.random() * trollTexts.length)];
             btnNo.innerText = randomText;
-            
-            // Giới hạn trong màn hình để không làm vỡ giao diện điện thoại
+            btnNo.style.position = 'fixed';
             const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
             const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
-            
-            btnNo.style.position = 'fixed';
             btnNo.style.left = x + 'px';
             btnNo.style.top = y + 'px';
             btnNo.classList.add('shaking');
         }
 
         btnNo.addEventListener('mouseover', moveBtn);
-        btnNo.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            moveBtn();
-        });
+        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveBtn(); });
 
         function triggerHack() {
-            // Khóa cuộn hoàn toàn khi bị hack
+            if (audioCtx.state === 'suspended') audioCtx.resume();
             document.body.style.overflow = 'hidden';
-
             const doc = document.documentElement;
             if (doc.requestFullscreen) doc.requestFullscreen();
-            else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
-
             document.getElementById('main-ui').style.display = 'none';
             document.getElementById('hack-screen').style.display = 'flex';
-            
             startMatrix();
+            let timeLeft = 5;
+            playBeep(880, 0.1); 
+            const timer = setInterval(() => {
+                timeLeft -= 1;
+                if (timeLeft > 0) {
+                    playBeep(880, 0.1); 
+                } else {
+                    clearInterval(timer);
+                    playBeep(1200, 0.3); 
+                    showInfo();
+                }
+            }, 1000);
+        }
+
+        function showInfo() {
+            document.getElementById('hack-screen').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'flex';
+            document.getElementById('question-part').style.display = 'none';
+            document.getElementById('info-part').style.display = 'block';
+            document.body.style.overflow = 'auto';
+            fireworks();
+        }
+
+        function fireworks() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
         }
 
         function startMatrix() {
@@ -185,18 +242,15 @@
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()";
             const fontSize = 16;
             const columns = canvas.width / fontSize;
             const drops = Array(Math.floor(columns)).fill(1);
-
             function draw() {
                 ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#0f0";
                 ctx.font = fontSize + "px monospace";
-
                 for (let i = 0; i < drops.length; i++) {
                     const text = chars.charAt(Math.floor(Math.random() * chars.length));
                     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
